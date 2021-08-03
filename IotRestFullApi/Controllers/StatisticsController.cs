@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IotRestFullApi.Controllers
 {
-    public class DeviceStatisticsController : Controller
+    public class StatisticsController : Controller
     {
         // GET: DeviceStatistics
         public ActionResult Index()

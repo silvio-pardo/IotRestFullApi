@@ -1,86 +1,75 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IotRestFullApi.Entities;
+using IotRestFullApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IotRestFullApi.Controllers
 {
     public class DevicesController : Controller
     {
-        // GET: DevicesController
-        public ActionResult Index()
+        private readonly DeviceRepository deviceRepository;
+
+        public DevicesController(DeviceRepository deviceRepository)
         {
-            return View();
+            this.deviceRepository = deviceRepository;
         }
 
-        // GET: DevicesController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("GetMany")]
+        public ActionResult GetMany()
         {
-            return View();
+            IList<Device> response = deviceRepository.GetAll();
+            if (response != null)
+                return Ok(response);
+            else
+                return StatusCode(500);
         }
-
-        // GET: DevicesController/Create
-        public ActionResult Create()
+        [HttpGet("GetById/{id}")]
+        public ActionResult GetById(string id)
         {
-            return View();
-        }
+            if (id == null)
+                return BadRequest();
 
-        // POST: DevicesController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+            Device response = deviceRepository.Get(id);
+            if (response != null)
+                return Ok(response);
+            else
+                return StatusCode(500);
+        }
+        [HttpPut("Create")]
+        public ActionResult Create([FromBody] Device action)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                return Ok();
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+        [HttpPost("Edit")]
+        public ActionResult Edit([FromBody] Device action)
+        {
+            try
+            {
+                return Ok();
             }
             catch
             {
                 return View();
             }
         }
-
-        // GET: DevicesController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: DevicesController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: DevicesController/Delete/5
+        [HttpDelete("Delete/{id}")]
         public ActionResult Delete(int id)
         {
-            return View();
-        }
-
-        // POST: DevicesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
             try
             {
-                return RedirectToAction(nameof(Index));
+                return Ok();
             }
             catch
             {
-                return View();
+                return StatusCode(500);
             }
         }
     }

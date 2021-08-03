@@ -31,17 +31,17 @@ namespace IotRestFullApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<IotContext>(options =>
+            services.AddDbContextPool<IotContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("Dev")));
             AddRepositories(services);
         }
 
         public void AddRepositories(IServiceCollection services)
         {
-            services.AddSingleton<ActionRepository>();
-            services.AddSingleton<CommandRepository>();
-            services.AddSingleton<DeviceRepository>();
-            services.AddSingleton<StatsRepository>();
+            services.AddScoped<ActionRepository>();
+            services.AddScoped<CommandRepository>();
+            services.AddScoped<DeviceRepository>();
+            services.AddScoped<StatsRepository>();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

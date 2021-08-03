@@ -25,8 +25,7 @@ namespace IotRestFullApi.Middlewares
             string authHeader = httpContext.Request.Headers["Authorization"];
             if (authHeader != null)
             {
-               
-                if (authHeader == configuration.GetSection("ApiKey").ToString())
+                if (authHeader == configuration.GetSection("ApiKey").Value.ToString())
                 {
                     await _next(httpContext);
                 }

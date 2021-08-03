@@ -10,6 +10,7 @@ namespace IotRestFullApi.Dal
         }
         public DbSet<Command> Command { get; set; }
         public DbSet<Device> Device { get; set; }
+        public DbSet<Action> Action { get; set; }
         public DbSet<Stats> Stats { get; set; }
     }
 }

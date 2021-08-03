@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 namespace IotRestFullApi.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class DevicesController : Controller
     {
         private readonly DeviceRepository deviceRepository;
@@ -37,19 +39,23 @@ namespace IotRestFullApi.Controllers
                 return StatusCode(500);
         }
         [HttpPut("Create")]
-        public ActionResult Create([FromBody] Device action)
+        public ActionResult Create([FromBody] Device device)
         {
             try
             {
-                return Ok();
+                Device result = deviceRepository.Insert(device);
+                if (result != null)
+                    return Ok(device);
+                else
+                    return StatusCode(500);
             }
             catch
             {
-                return StatusCode(500);
+                return BadRequest();
             }
         }
         [HttpPost("Edit")]
-        public ActionResult Edit([FromBody] Device action)
+        public ActionResult Edit([FromBody] Device device)
         {
             try
             {

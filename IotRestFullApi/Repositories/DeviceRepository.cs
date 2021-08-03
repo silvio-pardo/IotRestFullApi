@@ -26,9 +26,13 @@ namespace IotRestFullApi.Repository
             IList<Device> foundValue = iotContext.Device.Select(_ => new Device() { Uid = _.Uid, Name = _.Name, Type = _.Type}).ToList();
             return foundValue;
         }
-        public bool Insert(Device data)
+        public Device Insert(Device data)
         {
-            return true;
+            if (data == null)
+                return null;
+            iotContext.Add<Device>(data);
+            iotContext.SaveChanges();
+            return data;
         }
     }
 }

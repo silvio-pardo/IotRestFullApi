@@ -8,7 +8,7 @@ namespace IotRestFullApi.Dal
         public IotContext(DbContextOptions<IotContext> options) : base(options)
         {
         }
-        public DbSet<Action> Action { get; set; }
+        public DbSet<Command> Command { get; set; }
         public DbSet<Device> Device { get; set; }
         public DbSet<Stats> Stats { get; set; }
     }

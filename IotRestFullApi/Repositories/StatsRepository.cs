@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IotRestFullApi.Entities.Enum
+namespace IotRestFullApi.Repositories
 {
-    public enum ActionType
+    public class StatsRepository
     {
-        ToExecute,
-        Executed
     }
 }

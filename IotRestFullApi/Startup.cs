@@ -1,5 +1,7 @@
 using IotRestFullApi.Dal;
 using IotRestFullApi.Middlewares;
+using IotRestFullApi.Repositories;
+using IotRestFullApi.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,9 +32,17 @@ namespace IotRestFullApi
         {
             services.AddControllers();
             services.AddDbContext<IotContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("ConnectionString")));
+               options.UseSqlServer(Configuration.GetConnectionString("Dev")));
+            AddRepositories(services);
         }
 
+        public void AddRepositories(IServiceCollection services)
+        {
+            services.AddSingleton<ActionRepository>();
+            services.AddSingleton<CommandRepository>();
+            services.AddSingleton<DeviceRepository>();
+            services.AddSingleton<StatsRepository>();
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

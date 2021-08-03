@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  iotrestfullapi:
+    image: ${DOCKER_REGISTRY-}iotrestfullapi
+    build:
+      context: .
+      dockerfile: IotRestFullApi/Dockerfile
+  iotrestfullapisqlserver:
+    image: "mcr.microsoft.com/mssql/server:latest"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Iot_Rest_Sql_Dev"
+      MSSQL_PID: Express
+    ports:
+    - "14331:1433"

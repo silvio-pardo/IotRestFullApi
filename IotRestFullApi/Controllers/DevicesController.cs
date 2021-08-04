@@ -49,7 +49,7 @@ namespace IotRestFullApi.Controllers
                 else
                     return StatusCode(500);
             }
-            catch
+            catch(Exception e)
             {
                 return BadRequest();
             }

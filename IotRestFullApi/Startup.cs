@@ -31,8 +31,15 @@ namespace IotRestFullApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            string connectionString = "";
+            string envDocker = Environment.GetEnvironmentVariable("DATABASE_HOST");
+            if (envDocker != null)
+                connectionString = envDocker + Configuration.GetConnectionString("StaticParams");
+            else
+                connectionString = Configuration.GetConnectionString("MigrationParam") + Configuration.GetConnectionString("StaticParams");
+
             services.AddDbContextPool<IotContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("Dev")));
+               options.UseSqlServer(connectionString));
             AddRepositories(services);
         }
 

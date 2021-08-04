@@ -6,6 +6,10 @@ services:
     build:
       context: .
       dockerfile: IotRestFullApi/Dockerfile
+    environment:
+      - DATABASE_HOST=Server=iotrestfullapisqlserver;
+    depends_on:
+        - iotrestfullapisqlserver
   iotrestfullapisqlserver:
     image: "mcr.microsoft.com/mssql/server:latest"
     environment:
@@ -13,4 +17,4 @@ services:
       SA_PASSWORD: "Iot_Rest_Sql_Dev"
       MSSQL_PID: Express
     ports:
-    - "14331:1433"
+        - "1433:1433"

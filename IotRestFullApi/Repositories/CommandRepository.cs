@@ -24,7 +24,7 @@ namespace IotRestFullApi.Repositories
         {
             if (iotContext == null)
                 return null;
-            IList<Command> foundValue = iotContext.Command.Select(_ => new Command() { Id = _.Id, Payload = _.Payload, Device = _.Device, Uid = _.Uid, Time = _.Time, Type = _.Type }).ToList();
+            IList<Command> foundValue = iotContext.Command.Select(_ => new Command() { Id = _.Id, Payload = _.Payload, Device = _.Device, Uid = _.Uid, Time = _.Time, Status = _.Status }).ToList();
             return foundValue;
         }
         public Command Insert(Command data)

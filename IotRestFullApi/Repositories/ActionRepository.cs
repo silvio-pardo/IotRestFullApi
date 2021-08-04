@@ -22,7 +22,7 @@ namespace IotRestFullApi.Repositories
         {
             if (iotContext == null)
                 return null;
-            IList<Action> foundValue = iotContext.Action.Select(_ => new Action() { Id = _.Id, Status = _.Status, Payload = _.Payload, Device = _.Device, Uid = _.Uid}).ToList();
+            IList<Action> foundValue = iotContext.Action.Select(_ => new Action() { Id = _.Id, Payload = _.Payload, Device = _.Device, Uid = _.Uid}).ToList();
             return foundValue;
         }
         public Action Insert(Action data)

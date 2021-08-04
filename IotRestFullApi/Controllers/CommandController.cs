@@ -2,6 +2,7 @@
 using IotRestFullApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IotRestFullApi.Controllers
 {
@@ -32,6 +33,15 @@ namespace IotRestFullApi.Controllers
                 return BadRequest();
 
             Command response = commandRepository.Get(id);
+            if (response != null)
+                return Ok(response);
+            else
+                return StatusCode(500);
+        }
+        [HttpGet("GetLastToExecute")]
+        public ActionResult GetLastToExecute()
+        {
+            Command response = commandRepository.GetAll().Where(_ => _.Status == Entities.Enum.CommandStatus.ToExecute).FirstOrDefault();
             if (response != null)
                 return Ok(response);
             else

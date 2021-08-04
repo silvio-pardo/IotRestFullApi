@@ -1,6 +1,7 @@
 ﻿using IotRestFullApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using System.Collections.Generic;
+using IotRestFullApi.Entities;
 
 namespace IotRestFullApi.Controllers
 {
@@ -17,19 +18,34 @@ namespace IotRestFullApi.Controllers
         [HttpGet("GetMany")]
         public ActionResult GetMany()
         {
-            return Ok();
+            IList<Action> response = actionRepository.GetAll();
+            if (response != null)
+                return Ok(response);
+            else
+                return StatusCode(500);
         }
         [HttpGet("GetById/{id}")]
         public ActionResult GetById(int id)
         {
-            return Ok();
+            if (id == 0)
+                return BadRequest();
+
+            Action response = actionRepository.Get(id);
+            if (response != null)
+                return Ok(response);
+            else
+                return StatusCode(500);
         }
         [HttpPut("Create")]
         public ActionResult Create([FromBody] Action action)
         {
             try
             {
-                return Ok();
+                Action result = actionRepository.Insert(action);
+                if (result != null)
+                    return Ok(action);
+                else
+                    return StatusCode(500);
             }
             catch
             {
@@ -41,7 +57,11 @@ namespace IotRestFullApi.Controllers
         {
             try
             {
-                return Ok();
+                Action result = actionRepository.Modify(action);
+                if (result != null)
+                    return Ok(action);
+                else
+                    return StatusCode(500);
             }
             catch
             {
@@ -53,7 +73,11 @@ namespace IotRestFullApi.Controllers
         {
             try
             {
-                return Ok();
+                bool result = actionRepository.Delete(id);
+                if (result)
+                    return Ok();
+                else
+                    return StatusCode(500);
             }
             catch
             {

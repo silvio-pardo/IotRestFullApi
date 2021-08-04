@@ -34,5 +34,22 @@ namespace IotRestFullApi.Repository
             iotContext.SaveChanges();
             return data;
         }
+        public Device Modify(Device data)
+        {
+            if (data == null)
+                return null;
+            iotContext.Update<Device>(data);
+            iotContext.SaveChanges();
+            return data;
+        }
+        public bool Delete(string id)
+        {
+            if (id == null)
+                return false;
+            Device tempDevice = new Device() { Uid = id };
+            iotContext.Remove<Device>(tempDevice);
+            iotContext.SaveChanges();
+            return true;
+        }
     }
 }

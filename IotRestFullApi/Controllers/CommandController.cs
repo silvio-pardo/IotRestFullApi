@@ -1,7 +1,7 @@
 ﻿using IotRestFullApi.Entities;
 using IotRestFullApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using System.Collections.Generic;
 
 namespace IotRestFullApi.Controllers
 {
@@ -19,31 +19,50 @@ namespace IotRestFullApi.Controllers
         [HttpGet("GetMany")]
         public ActionResult GetMany()
         {
-            return Ok();
+            IList<Command> response = commandRepository.GetAll();
+            if (response != null)
+                return Ok(response);
+            else
+                return StatusCode(500);
         }
         [HttpGet("GetById/{id}")]
         public ActionResult GetById(int id)
         {
-            return Ok();
+            if (id == 0)
+                return BadRequest();
+
+            Command response = commandRepository.Get(id);
+            if (response != null)
+                return Ok(response);
+            else
+                return StatusCode(500);
         }
         [HttpPut("Create")]
-        public ActionResult Create([FromBody] Command action)
+        public ActionResult Create([FromBody] Command command)
         {
             try
             {
-                return Ok();
+                Command result = commandRepository.Insert(command);
+                if (result != null)
+                    return Ok(command);
+                else
+                    return StatusCode(500);
             }
             catch
             {
-                return View();
+                return BadRequest();
             }
         }
         [HttpPost("Edit")]
-        public ActionResult Edit([FromBody] Command action)
+        public ActionResult Edit([FromBody] Command command)
         {
             try
             {
-                return Ok();
+                Command result = commandRepository.Modify(command);
+                if (result != null)
+                    return Ok(command);
+                else
+                    return StatusCode(500);
             }
             catch
             {
@@ -55,7 +74,11 @@ namespace IotRestFullApi.Controllers
         {
             try
             {
-                return Ok();
+                bool result = commandRepository.Delete(id);
+                if (result)
+                    return Ok();
+                else
+                    return StatusCode(500);
             }
             catch
             {

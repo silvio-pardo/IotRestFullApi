@@ -49,7 +49,7 @@ namespace IotRestFullApi.Controllers
                 else
                     return StatusCode(500);
             }
-            catch(Exception e)
+            catch
             {
                 return BadRequest();
             }
@@ -59,23 +59,31 @@ namespace IotRestFullApi.Controllers
         {
             try
             {
-                return Ok();
+                Device result = deviceRepository.Modify(device);
+                if (result != null)
+                    return Ok(device);
+                else
+                    return StatusCode(500);
             }
             catch
             {
-                return View();
+                return BadRequest();
             }
         }
         [HttpDelete("Delete/{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             try
             {
-                return Ok();
+                bool result = deviceRepository.Delete(id);
+                if (result)
+                    return Ok();
+                else
+                    return StatusCode(500);
             }
             catch
             {
-                return StatusCode(500);
+                return BadRequest();
             }
         }
     }

@@ -1,82 +1,89 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IotRestFullApi.Entities;
+using IotRestFullApi.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace IotRestFullApi.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class StatisticsController : Controller
     {
-        // GET: DeviceStatistics
-        public ActionResult Index()
+        private readonly StatsRepository statsRepository;
+
+        public StatisticsController(StatsRepository statsRepository)
         {
-            return View();
+            this.statsRepository = statsRepository;
         }
 
-        // GET: DeviceStatistics/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("GetMany")]
+        public ActionResult GetMany()
         {
-            return View();
+            IList<Stats> response = statsRepository.GetAll();
+            if (response != null)
+                return Ok(response);
+            else
+                return StatusCode(500);
         }
-
-        // GET: DeviceStatistics/Create
-        public ActionResult Create()
+        [HttpGet("GetById/{id}")]
+        public ActionResult GetById(int id)
         {
-            return View();
-        }
+            if (id == 0)
+                return BadRequest();
 
-        // POST: DeviceStatistics/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            Stats response = statsRepository.Get(id);
+            if (response != null)
+                return Ok(response);
+            else
+                return StatusCode(500);
         }
-
-        // GET: DeviceStatistics/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: DeviceStatistics/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpPut("Create")]
+        public ActionResult Create([FromBody] Stats stats)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                Stats result = statsRepository.Insert(stats);
+                if (result != null)
+                    return Ok(stats);
+                else
+                    return StatusCode(500);
             }
             catch
             {
-                return View();
+                return BadRequest();
             }
         }
-
-        // GET: DeviceStatistics/Delete/5
+        [HttpPost("Edit")]
+        public ActionResult Edit([FromBody] Stats stats)
+        {
+            try
+            {
+                Stats result = statsRepository.Modify(stats);
+                if (result != null)
+                    return Ok(stats);
+                else
+                    return StatusCode(500);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpDelete("Delete/{id}")]
         public ActionResult Delete(int id)
         {
-            return View();
-        }
-
-        // POST: DeviceStatistics/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
             try
             {
-                return RedirectToAction(nameof(Index));
+                bool result = statsRepository.Delete(id);
+                if (result)
+                    return Ok();
+                else
+                    return StatusCode(500);
             }
             catch
             {
-                return View();
+                return BadRequest();
             }
         }
     }

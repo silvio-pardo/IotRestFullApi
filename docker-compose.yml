@@ -10,6 +10,9 @@ services:
       - DATABASE_HOST=Server=iotrestfullapisqlserver;
     depends_on:
         - iotrestfullapisqlserver
+    ports:
+        - "6080:80"
+        - "6433:433"
   iotrestfullapisqlserver:
     image: "mcr.microsoft.com/mssql/server:latest"
     environment:

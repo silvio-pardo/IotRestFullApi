@@ -17,7 +17,7 @@ namespace IotRestFullApi.Controllers
             this.deviceRepository = deviceRepository;
         }
 
-        [HttpGet("GetMany")]
+        [HttpGet]
         public ActionResult GetMany()
         {
             IList<Device> response = deviceRepository.GetAll();
@@ -26,7 +26,7 @@ namespace IotRestFullApi.Controllers
             else
                 return StatusCode(500);
         }
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public ActionResult GetById(string id)
         {
             if (id == null)
@@ -70,7 +70,7 @@ namespace IotRestFullApi.Controllers
                 return BadRequest();
             }
         }
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}")]
         public ActionResult Delete(string id)
         {
             try

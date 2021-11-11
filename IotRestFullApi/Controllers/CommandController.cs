@@ -17,7 +17,7 @@ namespace IotRestFullApi.Controllers
             this.commandRepository = commandRepository;
         }
 
-        [HttpGet("GetMany")]
+        [HttpGet]
         public ActionResult GetMany()
         {
             IList<Command> response = commandRepository.GetAll();
@@ -26,7 +26,7 @@ namespace IotRestFullApi.Controllers
             else
                 return StatusCode(500);
         }
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public ActionResult GetById(int id)
         {
             if (id == 0)
@@ -43,7 +43,13 @@ namespace IotRestFullApi.Controllers
         {
             Command response = commandRepository.GetAll().Where(_ => _.Status == Entities.Enum.CommandStatus.ToExecute).FirstOrDefault();
             if (response != null)
+            {
+                //set executed
+                Command responseUpdate = response;
+                responseUpdate.Status = Entities.Enum.CommandStatus.Executed;
+                commandRepository.Modify(responseUpdate);
                 return Ok(response);
+            }
             else
                 return StatusCode(500);
         }
@@ -79,7 +85,7 @@ namespace IotRestFullApi.Controllers
                 return BadRequest();
             }
         }
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             try

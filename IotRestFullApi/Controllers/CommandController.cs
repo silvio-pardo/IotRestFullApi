@@ -1,4 +1,5 @@
-﻿using IotRestFullApi.Entities;
+﻿using IotRestFullApi.Dto;
+using IotRestFullApi.Entities;
 using IotRestFullApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace IotRestFullApi.Controllers
         [HttpGet]
         public ActionResult GetMany()
         {
-            IList<Command> response = commandRepository.GetAll();
+            IList<CommandResponse> response = commandRepository.GetAll();
             if (response != null)
                 return Ok(response);
             else
@@ -32,7 +33,7 @@ namespace IotRestFullApi.Controllers
             if (id == 0)
                 return BadRequest();
 
-            Command response = commandRepository.Get(id);
+            CommandResponse response = commandRepository.Get(id);
             if (response != null)
                 return Ok(response);
             else
@@ -41,12 +42,18 @@ namespace IotRestFullApi.Controllers
         [HttpGet("GetLastToExecute")]
         public ActionResult GetLastToExecute()
         {
-            Command response = commandRepository.GetAll().Where(_ => _.Status == Entities.Enum.CommandStatus.ToExecute).FirstOrDefault();
+            CommandResponse response = commandRepository.GetAll().Where(_ => _.Status == Entities.Enum.CommandStatus.ToExecute).FirstOrDefault();
             if (response != null)
             {
                 //set executed
-                Command responseUpdate = response;
-                responseUpdate.Status = Entities.Enum.CommandStatus.Executed;
+                Command responseUpdate = new Command()
+                {
+                    Id = response.Id,
+                    Status = Entities.Enum.CommandStatus.Executed,
+                    Payload = response.Payload,
+                    Time = response.Time,
+                    Uid = response.Uid
+                };
                 commandRepository.Modify(responseUpdate);
                 return Ok(response);
             }
@@ -90,7 +97,7 @@ namespace IotRestFullApi.Controllers
         {
             try
             {
-                bool result = commandRepository.Delete(id);
+                bool result = commandRepository.Delete(new Command() { Id = id });
                 if (result)
                     return Ok();
                 else

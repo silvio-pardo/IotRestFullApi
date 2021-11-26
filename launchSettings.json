@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "iotrestfullapi",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/index.html",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "iotrestfullapi": "StartDebugging",
+        "iotrestfullapisqlserver": "StartWithoutDebugging"
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
-﻿using IotRestFullApi.Entities;
+﻿using IotRestFullApi.Dto;
+using IotRestFullApi.Entities;
 using IotRestFullApi.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace IotRestFullApi.Controllers
         [HttpGet]
         public ActionResult GetMany()
         {
-            IList<Stats> response = statsRepository.GetAll();
+            IList<StatsResponse> response = statsRepository.GetAll();
             if (response != null)
                 return Ok(response);
             else
@@ -33,7 +33,7 @@ namespace IotRestFullApi.Controllers
             if (id == 0)
                 return BadRequest();
 
-            Stats response = statsRepository.Get(id);
+            StatsResponse response = statsRepository.Get(id);
             if (response != null)
                 return Ok(response);
             else
@@ -42,7 +42,7 @@ namespace IotRestFullApi.Controllers
         [HttpGet("GetLastStats")]
         public ActionResult GetLastStats()
         {
-            Stats response = statsRepository.GetAll().LastOrDefault();
+            StatsResponse response = statsRepository.GetAll().LastOrDefault();
             if (response != null)
                 return Ok(response);
             else
@@ -85,7 +85,7 @@ namespace IotRestFullApi.Controllers
         {
             try
             {
-                bool result = statsRepository.Delete(id);
+                bool result = statsRepository.Delete(new Stats() { Id = id });
                 if (result)
                     return Ok();
                 else

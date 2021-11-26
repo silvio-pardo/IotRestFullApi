@@ -4,14 +4,16 @@ using IotRestFullApi.Dal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IotRestFullApi.Migrations
 {
     [DbContext(typeof(IotContext))]
-    partial class IotContextModelSnapshot : ModelSnapshot
+    [Migration("20211112094823_UpdateKey")]
+    partial class UpdateKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,7 +28,7 @@ namespace IotRestFullApi.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DeviceId")
+                    b.Property<string>("DeviceID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Payload")
@@ -37,7 +39,7 @@ namespace IotRestFullApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeviceId");
+                    b.HasIndex("DeviceID");
 
                     b.ToTable("Action");
                 });
@@ -49,7 +51,7 @@ namespace IotRestFullApi.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DeviceId")
+                    b.Property<string>("DeviceID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Payload")
@@ -66,7 +68,7 @@ namespace IotRestFullApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeviceId");
+                    b.HasIndex("DeviceID");
 
                     b.ToTable("Command");
                 });
@@ -94,7 +96,7 @@ namespace IotRestFullApi.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DeviceId")
+                    b.Property<string>("DeviceID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("LastUpdate")
@@ -105,7 +107,7 @@ namespace IotRestFullApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeviceId");
+                    b.HasIndex("DeviceID");
 
                     b.ToTable("Stats");
                 });
@@ -114,7 +116,7 @@ namespace IotRestFullApi.Migrations
                 {
                     b.HasOne("IotRestFullApi.Entities.Device", "Device")
                         .WithMany("Actions")
-                        .HasForeignKey("DeviceId");
+                        .HasForeignKey("DeviceID");
 
                     b.Navigation("Device");
                 });
@@ -123,7 +125,7 @@ namespace IotRestFullApi.Migrations
                 {
                     b.HasOne("IotRestFullApi.Entities.Device", "Device")
                         .WithMany("Commands")
-                        .HasForeignKey("DeviceId");
+                        .HasForeignKey("DeviceID");
 
                     b.Navigation("Device");
                 });
@@ -132,7 +134,7 @@ namespace IotRestFullApi.Migrations
                 {
                     b.HasOne("IotRestFullApi.Entities.Device", "Device")
                         .WithMany("Stats")
-                        .HasForeignKey("DeviceId");
+                        .HasForeignKey("DeviceID");
 
                     b.Navigation("Device");
                 });

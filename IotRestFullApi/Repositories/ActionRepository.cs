@@ -1,54 +1,36 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using IotRestFullApi.Dal;
+using IotRestFullApi.Dto;
 using IotRestFullApi.Entities;
+using Microsoft.EntityFrameworkCore;
+
 namespace IotRestFullApi.Repositories
 {
-    public class ActionRepository
+    public class ActionRepository : BaseRepositories<Action>
     {
-        private readonly IotContext iotContext;
-        public ActionRepository(IotContext iotContext)
+        public ActionRepository(IotContext iotContext) : base(iotContext)
         {
-            this.iotContext = iotContext;
         }
-        public Action Get(int key)
+        public ActionResponse Get(int key)
         {
             if (iotContext == null)
                 return null;
-            Action foundValue = iotContext.Action.Where(_ => _.Id == key).FirstOrDefault();
+            ActionResponse foundValue = iotContext.Action
+            .Where(_ => _.Id == key)
+            .Select(_ => new ActionResponse() { Id = _.Id, Payload = _.Payload, DeviceID = _.DeviceId, Uid = _.Uid})
+            .ToList()
+            .FirstOrDefault();
             return foundValue;
         }
-        public IList<Action> GetAll()
+        public IList<ActionResponse> GetAll()
         {
             if (iotContext == null)
                 return null;
-            IList<Action> foundValue = iotContext.Action.Select(_ => new Action() { Id = _.Id, Payload = _.Payload, Device = _.Device, Uid = _.Uid}).ToList();
+            IList<ActionResponse> foundValue = iotContext.Action
+              .Select(_ => new ActionResponse() { Id = _.Id, Payload = _.Payload, DeviceID = _.DeviceId, Uid = _.Uid})
+              .ToList();
             return foundValue;
-        }
-        public Action Insert(Action data)
-        {
-            if (data == null)
-                return null;
-            iotContext.Add<Action>(data);
-            iotContext.SaveChanges();
-            return data;
-        }
-        public Action Modify(Action data)
-        {
-            if (data == null)
-                return null;
-            iotContext.Update<Action>(data);
-            iotContext.SaveChanges();
-            return data;
-        }
-        public bool Delete(int id)
-        {
-            if (id == 0)
-                return false;
-            Action tempAction = new Action() { Id = id };
-            iotContext.Remove<Action>(tempAction);
-            iotContext.SaveChanges();
-            return true;
         }
     }
 }

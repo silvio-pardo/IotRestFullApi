@@ -14,15 +14,15 @@ namespace IotRestFullApi.Dal
         public DbSet<Stats> Stats { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Device>()
-                .HasMany(_ => _.Actions)
-                .WithOne(_ => _.Device);
-            modelBuilder.Entity<Device>()
-                .HasMany(_ => _.Commands)
-                .WithOne(_ => _.Device);
-            modelBuilder.Entity<Device>()
-                .HasMany(_ => _.Stats)
-                .WithOne(_ => _.Device);
+            modelBuilder.Entity<Action>()
+                .HasOne(b => b.Device)
+                .WithMany(a => a.Actions);
+            modelBuilder.Entity<Command>()
+                .HasOne(b => b.Device)
+                .WithMany(a => a.Commands);
+            modelBuilder.Entity<Stats>()
+                .HasOne(b => b.Device)
+                .WithMany(a => a.Stats);
         }
     }
 }

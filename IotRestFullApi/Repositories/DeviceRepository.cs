@@ -1,55 +1,110 @@
 ﻿using IotRestFullApi.Dal;
+using IotRestFullApi.Dto;
 using IotRestFullApi.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace IotRestFullApi.Repository
+namespace IotRestFullApi.Repositories
 {
-    public class DeviceRepository
+    public class DeviceRepository : BaseRepositories<Device>
     {
-        private readonly IotContext iotContext;
-        public DeviceRepository(IotContext iotContext)
+        public DeviceRepository(IotContext iotContext) : base(iotContext)
         {
-            this.iotContext = iotContext;
         }
-        public Device Get(string key)
+        public DeviceResponse Get(string key)
         {
             if (iotContext == null)
                 return null;
-            Device foundValue = iotContext.Device.Where(_ => _.Uid == key).FirstOrDefault();
+            DeviceResponse foundValue = iotContext.Device
+            .Where(_ => _.Uid == key)
+            .Include(_ => _.Commands)
+            .Include(_ => _.Actions)
+            .Include(_ => _.Stats)
+            .AsSingleQuery()
+            .Select(_ => new DeviceResponse()
+            {
+                Uid = _.Uid,
+                Name = _.Name,
+                Type = _.Type,
+                Commands = _.Commands
+                .Select(x => new CommandResponse()
+                {
+                    Id = x.Id,
+                    Payload = x.Payload,
+                    Uid = x.Uid,
+                    Time = x.Time,
+                    Status = x.Status,
+                    DeviceID = x.Device.Uid
+                })
+                .ToList(),
+                Actions = _.Actions
+                .Select(y => new ActionResponse()
+                {
+                    Id = y.Id,
+                    Payload = y.Payload,
+                    Uid = y.Uid,
+                    DeviceID = y.Device.Uid
+                })
+                .ToList(),
+                Stats = _.Stats.Select(z => new StatsResponse()
+                {
+                    Id = z.Id,
+                    Payload = z.Payload,
+                    LastUpdate = z.LastUpdate,
+                    DeviceID = z.Device.Uid
+                })
+                .ToList()
+            })
+            .ToList()
+            .FirstOrDefault();
             return foundValue;
         }
-        public IList<Device> GetAll()
+        public IList<DeviceResponse> GetAll()
         {
             if (iotContext == null)
                 return null;
-            IList<Device> foundValue = iotContext.Device.Select(_ => new Device() { Uid = _.Uid, Name = _.Name, Type = _.Type}).ToList();
+            IList<DeviceResponse> foundValue = iotContext.Device
+                .Include(_ => _.Commands)
+                .Include(_ => _.Actions)
+                .Include(_ => _.Stats)
+                .AsSingleQuery()
+                .Select(_ => new DeviceResponse()
+                {
+                    Uid = _.Uid,
+                    Name = _.Name,
+                    Type = _.Type,
+                    Commands = _.Commands
+                    .Select(x => new CommandResponse() 
+                    { 
+                        Id = x.Id, 
+                        Payload = x.Payload, 
+                        Uid = x.Uid, 
+                        Time = x.Time, 
+                        Status = x.Status,
+                        DeviceID = x.Device.Uid
+                    })
+                    .ToList(),
+                    Actions = _.Actions
+                    .Select(y => new ActionResponse()
+                    { 
+                        Id = y.Id,
+                        Payload = y.Payload,
+                        Uid = y.Uid,
+                        DeviceID = y.Device.Uid
+                    })
+                    .ToList(),
+                    Stats = _.Stats.Select(z => new StatsResponse()
+                    {
+                        Id = z.Id,
+                        Payload = z.Payload,
+                        LastUpdate = z.LastUpdate,
+                        DeviceID = z.Device.Uid
+                    })
+                    .ToList()
+                })
+                .ToList();
             return foundValue;
-        }
-        public Device Insert(Device data)
-        {
-            if (data == null)
-                return null;
-            iotContext.Add<Device>(data);
-            iotContext.SaveChanges();
-            return data;
-        }
-        public Device Modify(Device data)
-        {
-            if (data == null)
-                return null;
-            iotContext.Update<Device>(data);
-            iotContext.SaveChanges();
-            return data;
-        }
-        public bool Delete(string id)
-        {
-            if (id == null)
-                return false;
-            Device tempDevice = new Device() { Uid = id };
-            iotContext.Remove<Device>(tempDevice);
-            iotContext.SaveChanges();
-            return true;
         }
     }
 }

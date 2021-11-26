@@ -1,56 +1,36 @@
 ﻿using IotRestFullApi.Dal;
 using IotRestFullApi.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using IotRestFullApi.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace IotRestFullApi.Repositories
 {
-    public class StatsRepository
+    public class StatsRepository : BaseRepositories<Stats>
     {
-        private readonly IotContext iotContext;
-        public StatsRepository(IotContext iotContext)
+        public StatsRepository(IotContext iotContext) : base(iotContext)
         {
-            this.iotContext = iotContext;
         }
-        public Stats Get(int key)
+        public StatsResponse Get(int key)
         {
             if (iotContext == null)
                 return null;
-            Stats foundValue = iotContext.Stats.Where(_ => _.Id == key).FirstOrDefault();
+            StatsResponse foundValue = iotContext.Stats
+             .Where(_ => _.Id == key)
+             .Select(_ => new StatsResponse() { Id = _.Id, Payload = _.Payload, DeviceID = _.DeviceId, LastUpdate = _.LastUpdate })
+             .ToList()
+             .FirstOrDefault();
             return foundValue;
         }
-        public IList<Stats> GetAll()
+        public IList<StatsResponse> GetAll()
         {
             if (iotContext == null)
                 return null;
-            IList<Stats> foundValue = iotContext.Stats.Select(_ => new Stats() { Id=_.Id, Device=_.Device, Payload=_.Payload, LastUpdate=_.LastUpdate}).ToList();
+            IList<StatsResponse> foundValue = iotContext.Stats
+              .Select(_ => new StatsResponse() { Id = _.Id, Payload = _.Payload, DeviceID = _.DeviceId, LastUpdate = _.LastUpdate })
+              .ToList(); 
             return foundValue;
-        }
-        public Stats Insert(Stats data)
-        {
-            if (data == null)
-                return null;
-            iotContext.Add<Stats>(data);
-            iotContext.SaveChanges();
-            return data;
-        }
-        public Stats Modify(Stats data)
-        {
-            if (data == null)
-                return null;
-            iotContext.Update<Stats>(data);
-            iotContext.SaveChanges();
-            return data;
-        }
-        public bool Delete(int id)
-        {
-            if (id == 0)
-                return false;
-            Stats tempStats = new Stats() { Id = id };
-            iotContext.Remove<Stats>(tempStats);
-            iotContext.SaveChanges();
-            return true;
         }
     }
 }

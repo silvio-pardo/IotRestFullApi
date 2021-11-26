@@ -1,20 +1,13 @@
 using IotRestFullApi.Dal;
 using IotRestFullApi.Middlewares;
 using IotRestFullApi.Repositories;
-using IotRestFullApi.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace IotRestFullApi
 {
@@ -39,7 +32,7 @@ namespace IotRestFullApi
                 connectionString = Configuration.GetConnectionString("MigrationParam") + Configuration.GetConnectionString("StaticParams");
 
             services.AddDbContextPool<IotContext>(options =>
-               options.UseSqlServer(connectionString));
+               options.UseSqlServer(connectionString, o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
             AddRepositories(services);
         }
 

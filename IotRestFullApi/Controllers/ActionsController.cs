@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using IotRestFullApi.Entities;
+using IotRestFullApi.Dto;
 
 namespace IotRestFullApi.Controllers
 {
@@ -18,7 +19,7 @@ namespace IotRestFullApi.Controllers
         [HttpGet]
         public ActionResult GetMany()
         {
-            IList<Action> response = actionRepository.GetAll();
+            IList<ActionResponse> response = actionRepository.GetAll();
             if (response != null)
                 return Ok(response);
             else
@@ -30,7 +31,7 @@ namespace IotRestFullApi.Controllers
             if (id == 0)
                 return BadRequest();
 
-            Action response = actionRepository.Get(id);
+            ActionResponse response = actionRepository.Get(id);
             if (response != null)
                 return Ok(response);
             else
@@ -73,7 +74,7 @@ namespace IotRestFullApi.Controllers
         {
             try
             {
-                bool result = actionRepository.Delete(id);
+                bool result = actionRepository.Delete(new Action() { Id = id });
                 if (result)
                     return Ok();
                 else

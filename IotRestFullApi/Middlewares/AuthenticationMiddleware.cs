@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace IotRestFullApi.Middlewares
@@ -8,11 +9,13 @@ namespace IotRestFullApi.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration configuration;
+        private readonly ILogger<AuthenticationMiddleware> logger;
 
-        public AuthenticationMiddleware(RequestDelegate next, IConfiguration configuration)
+        public AuthenticationMiddleware(RequestDelegate next, IConfiguration configuration, ILogger<AuthenticationMiddleware> logger)
         {
             _next = next;
             this.configuration = configuration;
+            this.logger = logger;
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -22,6 +25,7 @@ namespace IotRestFullApi.Middlewares
             {
                 if (authHeader == configuration.GetSection("ApiKey").Value.ToString())
                 {
+                    logger.LogInformation(httpContext.Request.Path.Value);
                     await _next(httpContext);
                 }
                 else

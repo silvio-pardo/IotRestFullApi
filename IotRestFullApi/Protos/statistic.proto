@@ -1,0 +1,16 @@
+﻿syntax = "proto3";
+option csharp_namespace = "IotRestFullApi";
+package statistics;
+
+service StatsStreaming {
+	rpc Statistics(RequestStatsStream) returns (stream ResponseStatsStream);
+}
+
+message RequestStatsStream {
+	string DeviceId = 1;
+}
+
+message ResponseStatsStream {
+	string DeviceId = 1;
+	string Payload = 2;
+}

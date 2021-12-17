@@ -39,10 +39,16 @@ namespace IotRestFullApi.Controllers
             else
                 return StatusCode(500);
         }
-        [HttpGet("GetLastToExecute")]
-        public ActionResult GetLastToExecute()
+        [HttpGet("GetLastToExecute/{DeviceId}")]
+        public ActionResult GetLastToExecute(string DeviceId)
         {
-            CommandResponse response = commandRepository.GetAll().Where(_ => _.Status == Entities.Enum.CommandStatus.ToExecute).FirstOrDefault();
+            if(DeviceId.Length == 0)
+                return StatusCode(500);
+
+            CommandResponse response = commandRepository
+                .GetAll()
+                .Where(_ => _.Status == Entities.Enum.CommandStatus.ToExecute && _.DeviceID == DeviceId)
+                .FirstOrDefault();
             if (response != null)
             {
                 //set executed
@@ -58,7 +64,7 @@ namespace IotRestFullApi.Controllers
                 return Ok(response);
             }
             else
-                return StatusCode(500);
+                return NotFound();
         }
         [HttpPut("Create")]
         public ActionResult Create([FromBody] Command command)

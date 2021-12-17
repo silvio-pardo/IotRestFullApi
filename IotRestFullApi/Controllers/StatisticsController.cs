@@ -64,6 +64,23 @@ namespace IotRestFullApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpPut("CreateNow")]
+        public ActionResult CreateNow([FromBody] Stats stats)
+        {
+            try
+            {
+                stats.LastUpdate = System.DateTime.Now;
+                Stats result = statsRepository.Insert(stats);
+                if (result != null)
+                    return Ok(stats);
+                else
+                    return StatusCode(500);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
         [HttpPost("Edit")]
         public ActionResult Edit([FromBody] Stats stats)
         {

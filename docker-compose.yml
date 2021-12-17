@@ -12,6 +12,7 @@ services:
         - iotrestfullapisqlserver
     ports:
         - "6080:80"
+        - "6090:5000"
   iotrestfullapisqlserver:
     image: "mcr.microsoft.com/mssql/server:latest"
     environment:

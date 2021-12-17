@@ -20,24 +20,31 @@ namespace IotRestFullApi.Middlewares
 
         public async Task Invoke(HttpContext httpContext)
         {
-            string authHeader = httpContext.Request.Headers["Authorization"];
-            if (authHeader != null)
+            if (httpContext.Request.Path.StartsWithSegments("/swagger"))
             {
-                if (authHeader == configuration.GetSection("ApiKey").Value.ToString())
+                await _next(httpContext);
+            }
+            else
+            {
+                string authHeader = httpContext.Request.Headers["Authorization"];
+                if (authHeader != null)
                 {
-                    logger.LogInformation(httpContext.Request.Path.Value);
-                    await _next(httpContext);
+                    if (authHeader == configuration.GetSection("ApiKey").Value.ToString())
+                    {
+                        logger.LogInformation(httpContext.Request.Path.Value);
+                        await _next(httpContext);
+                    }
+                    else
+                    {
+                        httpContext.Response.StatusCode = 401;
+                        return;
+                    }
                 }
                 else
                 {
                     httpContext.Response.StatusCode = 401;
                     return;
                 }
-            }
-            else
-            {
-                httpContext.Response.StatusCode = 401;
-                return;
             }
         }
     }

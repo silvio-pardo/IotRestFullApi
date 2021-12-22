@@ -1,8 +1,8 @@
-﻿using IotRestFullApi.Entities.Enum;
+﻿using IotCommon.Entities.Enum;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace IotRestFullApi.Entities
+namespace IotCommon.Entities
 {
     public class Device
     {

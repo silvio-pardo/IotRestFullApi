@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace IotRestFullApi.Entities
+namespace IotCommon.Entities
 {
     public class BaseEntities
     {

@@ -1,12 +1,12 @@
-﻿using System;
+﻿
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace IotRestFullApi.Entities
+namespace IotCommon.Entities
 {
-    public class Stats : BaseEntities
+    public class Action : BaseEntities
     {
         #region Properties
-        public DateTime LastUpdate { get; set; }
+        public string Uid { get; set; }
         public string Payload { get; set; }
         [ForeignKey(nameof(Device))]
         public string DeviceId { get; set; }

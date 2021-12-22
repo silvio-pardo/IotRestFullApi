@@ -1,5 +1,5 @@
 ﻿using IotRestFullApi.Dal;
-using IotRestFullApi.Entities;
+using IotCommon.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using IotRestFullApi.Dto;

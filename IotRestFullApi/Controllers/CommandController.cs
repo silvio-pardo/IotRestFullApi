@@ -1,5 +1,5 @@
 ﻿using IotRestFullApi.Dto;
-using IotRestFullApi.Entities;
+using IotCommon.Entities;
 using IotRestFullApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -47,7 +47,7 @@ namespace IotRestFullApi.Controllers
 
             CommandResponse response = commandRepository
                 .GetAll()
-                .Where(_ => _.Status == Entities.Enum.CommandStatus.ToExecute && _.DeviceID == DeviceId)
+                .Where(_ => _.Status == IotCommon.Entities.Enum.CommandStatus.ToExecute && _.DeviceID == DeviceId)
                 .FirstOrDefault();
             if (response != null)
             {
@@ -55,7 +55,7 @@ namespace IotRestFullApi.Controllers
                 Command responseUpdate = new Command()
                 {
                     Id = response.Id,
-                    Status = Entities.Enum.CommandStatus.Executed,
+                    Status = IotCommon.Entities.Enum.CommandStatus.Executed,
                     Payload = response.Payload,
                     Time = response.Time,
                     Uid = response.Uid

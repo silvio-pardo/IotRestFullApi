@@ -1,8 +1,8 @@
-﻿using IotRestFullApi.Entities.Enum;
+﻿using IotCommon.Entities.Enum;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace IotRestFullApi.Entities
+namespace IotCommon.Entities
 {
     public class Command : BaseEntities
     {

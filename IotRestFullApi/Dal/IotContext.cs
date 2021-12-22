@@ -1,4 +1,4 @@
-﻿using IotRestFullApi.Entities;
+﻿using IotCommon.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace IotRestFullApi.Dal

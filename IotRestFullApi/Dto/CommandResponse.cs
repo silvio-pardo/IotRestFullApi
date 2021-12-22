@@ -1,4 +1,4 @@
-﻿using IotRestFullApi.Entities.Enum;
+﻿using IotCommon.Entities.Enum;
 using System;
 
 namespace IotRestFullApi.Dto

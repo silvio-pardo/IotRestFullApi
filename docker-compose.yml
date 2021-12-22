@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.6'
 
 services:
   iotrestfullapi:
@@ -7,12 +7,16 @@ services:
       context: .
       dockerfile: IotRestFullApi/Dockerfile
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - DATABASE_HOST=Server=iotrestfullapisqlserver;
     depends_on:
-        - iotrestfullapisqlserver
+      - iotrestfullapisqlserver
+      - iotrestapiseq
     ports:
-        - "6080:80"
-        - "6090:5000"
+      - "6080:80"
+      - "6090:5000"
+    volumes:
+      - ~/.aspnet/https:/https:ro
   iotrestfullapisqlserver:
     image: "mcr.microsoft.com/mssql/server:latest"
     environment:
@@ -20,4 +24,11 @@ services:
       SA_PASSWORD: "Iot_Rest_Sql_Dev"
       MSSQL_PID: Express
     ports:
-        - "1433:1433"
+      - "1433:1433"
+  iotrestapiseq:
+    image: datalust/seq:latest
+    ports:
+      - "6100:80"
+      - "5341:5341"
+    environment:
+      ACCEPT_EULA: "Y"

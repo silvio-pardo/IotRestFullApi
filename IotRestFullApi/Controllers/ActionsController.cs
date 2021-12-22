@@ -1,7 +1,7 @@
 ﻿using IotRestFullApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using IotRestFullApi.Entities;
+using IotCommon.Entities;
 using IotRestFullApi.Dto;
 
 namespace IotRestFullApi.Controllers

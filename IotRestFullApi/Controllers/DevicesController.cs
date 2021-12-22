@@ -1,5 +1,5 @@
 ﻿using IotRestFullApi.Dto;
-using IotRestFullApi.Entities;
+using IotCommon.Entities;
 using IotRestFullApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

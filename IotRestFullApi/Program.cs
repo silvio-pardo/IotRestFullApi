@@ -92,12 +92,12 @@ namespace IotRestFullApi
         }
         private static void ConfigureKestrel(Logger logger,WebApplicationBuilder builder)
         {
-            builder.WebHost.ConfigureKestrel(options =>
+            builder.WebHost.UseKestrel(options =>
             {
-                options.ListenAnyIP(portConfigurations.RestPort, listenOptions =>
+                options.ListenLocalhost(portConfigurations.RestPort, listenOptions =>
                     listenOptions.Protocols = HttpProtocols.Http1);
 
-                options.ListenAnyIP(portConfigurations.GrpcPort, listenOptions => {
+                options.ListenLocalhost( portConfigurations.GrpcPort, listenOptions => {
                     listenOptions.Protocols = HttpProtocols.Http2;
                     listenOptions.UseHttps("./../https/aspnetapp.pfx", "iotrestapi");
                 });

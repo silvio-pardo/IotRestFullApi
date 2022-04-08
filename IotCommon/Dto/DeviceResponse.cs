@@ -1,7 +1,6 @@
 ﻿using IotCommon.Entities.Enum;
-using System.Collections.Generic;
 
-namespace IotRestFullApi.Dto
+namespace IotCommon.Dto
 {
     public class DeviceResponse
     {

@@ -1,9 +1,10 @@
-﻿using IotRestFullApi.Dto;
-using IotCommon.Entities;
-using IotRestFullApi.Repositories;
+﻿using IotRestFullApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using IotCommon.Dto;
+using IotRestFullApi.Entities;
+using System;
 
 namespace IotRestFullApi.Controllers
 {
@@ -22,7 +23,7 @@ namespace IotRestFullApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetMany()
+        public ActionResult<DeviceResponse> GetMany()
         {
             logger.LogInformation("Device Get Many");
             IList<DeviceResponse> response = deviceRepository.GetAll();
@@ -32,7 +33,7 @@ namespace IotRestFullApi.Controllers
                 return StatusCode(500);
         }
         [HttpGet("{id}")]
-        public ActionResult GetById(string id)
+        public ActionResult<DeviceResponse> GetById(string id)
         {
             if (id == null)
                 return BadRequest();
@@ -44,34 +45,42 @@ namespace IotRestFullApi.Controllers
                 return StatusCode(500);
         }
         [HttpPut("Create")]
-        public ActionResult Create([FromBody] Device device)
+        public ActionResult<DeviceResponse> Create([FromBody] DeviceResponse device)
         {
             try
             {
-                Device result = deviceRepository.Insert(device);
+                DeviceResponse result = deviceRepository.InsertByDto(device);
                 if (result != null)
-                    return Ok(device);
+                    return Ok(result);
                 else
                     return StatusCode(500);
             }
-            catch
+            catch(Exception ex)
             {
+                logger.LogError(ex.Message);
                 return BadRequest();
             }
         }
         [HttpPost("Edit")]
-        public ActionResult Edit([FromBody] Device device)
+        public ActionResult<DeviceResponse> Edit([FromBody] DeviceResponse device)
         {
             try
             {
-                Device result = deviceRepository.Modify(device);
-                if (result != null)
-                    return Ok(device);
-                else
-                    return StatusCode(500);
+                Device finded = deviceRepository.Single(device.Uid);
+                if (finded == null)
+                    throw new Exception();
+                //update value
+                finded.Name = device.Name;
+                finded.Type = device.Type;
+                //modify
+                Device result = deviceRepository.Modify(finded);
+                if (result == null)
+                    throw new Exception();
+                return Ok(deviceRepository.mapToDto(result));
             }
-            catch
+            catch (Exception ex)
             {
+                logger.LogError(ex.Message);
                 return BadRequest();
             }
         }
@@ -80,14 +89,17 @@ namespace IotRestFullApi.Controllers
         {
             try
             {
-                bool result = deviceRepository.Delete(new Device() { Uid = id });
-                if (result)
-                    return Ok();
-                else
-                    return StatusCode(500);
+                Device finded = deviceRepository.Single(id);
+                if (finded == null)
+                    throw new Exception();
+                bool result = deviceRepository.Delete(finded);
+                if (!result)
+                    throw new Exception();
+                return Ok();
             }
-            catch
+            catch (Exception ex)
             {
+                logger.LogError(ex.Message);
                 return BadRequest();
             }
         }

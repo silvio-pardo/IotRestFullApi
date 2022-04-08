@@ -1,5 +1,5 @@
 ﻿using Grpc.Core;
-using IotRestFullApi.Dto;
+using IotCommon.Dto;
 using IotRestFullApi.Repositories;
 using Microsoft.Extensions.Logging;
 using System.Linq;

@@ -14,7 +14,6 @@ using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 using System;
-using System.IO;
 
 namespace IotRestFullApi
 {
@@ -94,10 +93,10 @@ namespace IotRestFullApi
         {
             builder.WebHost.UseKestrel(options =>
             {
-                options.ListenLocalhost(portConfigurations.RestPort, listenOptions =>
+                options.ListenAnyIP(portConfigurations.RestPort, listenOptions =>
                     listenOptions.Protocols = HttpProtocols.Http1);
 
-                options.ListenLocalhost( portConfigurations.GrpcPort, listenOptions => {
+                options.ListenAnyIP( portConfigurations.GrpcPort, listenOptions => {
                     listenOptions.Protocols = HttpProtocols.Http2;
                     listenOptions.UseHttps("./../https/aspnetapp.pfx", "iotrestapi");
                 });

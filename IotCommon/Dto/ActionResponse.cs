@@ -1,5 +1,5 @@
 ﻿
-namespace IotRestFullApi.Dto
+namespace IotCommon.Dto
 {
     public class ActionResponse : BaseResponse
     {

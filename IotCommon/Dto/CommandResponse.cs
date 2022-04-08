@@ -1,7 +1,7 @@
 ﻿using IotCommon.Entities.Enum;
 using System;
 
-namespace IotRestFullApi.Dto
+namespace IotCommon.Dto
 {
     public class CommandResponse : BaseResponse
     {

@@ -1,8 +1,7 @@
 ﻿using IotRestFullApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using IotCommon.Entities;
-using IotRestFullApi.Dto;
+using System;
 
 namespace IotRestFullApi.Controllers
 {
@@ -17,54 +16,60 @@ namespace IotRestFullApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetMany()
+        public ActionResult<IotCommon.Dto.ActionResponse> GetMany()
         {
-            IList<ActionResponse> response = actionRepository.GetAll();
+            IList<IotCommon.Dto.ActionResponse> response = actionRepository.GetAll();
             if (response != null)
                 return Ok(response);
             else
                 return StatusCode(500);
         }
         [HttpGet("{id}")]
-        public ActionResult GetById(int id)
+        public ActionResult<IotCommon.Dto.ActionResponse> GetById(int id)
         {
             if (id == 0)
                 return BadRequest();
 
-            ActionResponse response = actionRepository.Get(id);
+            IotCommon.Dto.ActionResponse response = actionRepository.Get(id);
             if (response != null)
                 return Ok(response);
             else
                 return StatusCode(500);
         }
         [HttpPut("Create")]
-        public ActionResult Create([FromBody] Action action)
+        public ActionResult<IotCommon.Dto.ActionResponse> Create([FromBody] IotCommon.Dto.ActionResponse action)
         {
             try
             {
-                Action result = actionRepository.Insert(action);
+                IotCommon.Dto.ActionResponse result = actionRepository.InsertByDto(action);
                 if (result != null)
                     return Ok(action);
                 else
                     return StatusCode(500);
             }
-            catch
+            catch (Exception)
             {
                 return BadRequest();
             }
         }
         [HttpPost("Edit")]
-        public ActionResult Edit([FromBody] Action action)
+        public ActionResult<IotCommon.Dto.ActionResponse> Edit([FromBody] IotCommon.Dto.ActionResponse action)
         {
             try
             {
-                Action result = actionRepository.Modify(action);
-                if (result != null)
-                    return Ok(action);
-                else
-                    return StatusCode(500);
+                Entities.Action finded = actionRepository.Single(action.Id);
+                if (finded == null)
+                    throw new Exception();
+                //update value
+                finded.Device.Uid = action.DeviceID;
+                finded.Payload = action.Payload;
+                //modify
+                Entities.Action result = actionRepository.Modify(finded);
+                if (result == null)
+                    throw new Exception();
+                return Ok(actionRepository.mapToDto(result));
             }
-            catch
+            catch (Exception)
             {
                 return BadRequest();
             }
@@ -74,13 +79,15 @@ namespace IotRestFullApi.Controllers
         {
             try
             {
-                bool result = actionRepository.Delete(new Action() { Id = id });
-                if (result)
-                    return Ok();
-                else
-                    return StatusCode(500);
+                Entities.Action finded = actionRepository.Single(id);
+                if(finded == null)
+                    throw new Exception();
+                bool result = actionRepository.Delete(finded);
+                if (!result)
+                    throw new Exception();
+                return Ok();
             }
-            catch
+            catch(Exception)
             {
                 return BadRequest();
             }
